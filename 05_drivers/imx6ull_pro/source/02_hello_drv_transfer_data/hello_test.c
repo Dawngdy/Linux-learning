@@ -5,22 +5,45 @@
 #include <unistd.h>
 #include <stdio.h>
 
-/*写   ./hello_test /dev/xxx 100ask
- *读   ./hello_test /dev/xxx
-*/
-
-
-
-int main (int argc, char **argv)
+/* 写: ./hello_test /dev/xxx 100ask
+ * 读: ./hello_test /dev/xxx
+ */
+int main(int argc, char **argv)
 {
-    //open
+    int fd;
+    int len;
+    char buf[100];
 
-    //write
+    if (argc < 2)
+    {
+        printf("Usage: \n");
+        printf("%s <dev> [string]\n", argv[0]);
+        return -1;
+    }
 
-    //read
+    // open
+    fd = open(argv[1], O_RDWR);
+    if (fd < 0)
+    {
+        printf("can not open file %s\n", argv[1]);
+        return -1;
+    }
 
-    //close
+    if (argc == 3)
+    {
+        // write
+        len = write(fd, argv[2], strlen(argv[2])+1);
+        printf("write ret = %d\n", len);
+    }
+    else
+    {
+        // read
+        len = read(fd, buf, 100);
+        buf[99] = '\0';
+        printf("read str : %s\n", buf);
+    }
 
-
-
+    // close
+    close(fd);
+    return 0;
 }
